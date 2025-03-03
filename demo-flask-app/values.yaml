@@ -1,0 +1,13 @@
+appName: demo-flask-app
+
+image:
+  repository: rajeshgoyalg/demo-flask-app
+  tag: latest  # This will be updated dynamically
+  pullPolicy: Always
+
+replicaCount: 2
+
+service:
+  type: NodePort
+  port: 80
+  targetPort: 3000
