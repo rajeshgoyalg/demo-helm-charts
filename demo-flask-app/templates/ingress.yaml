@@ -4,11 +4,21 @@ kind: Ingress
 metadata:
   name: {{ .Values.appName }}-ingress
   annotations:
-    {{- range $key, $value := .Values.ingress.annotations }}
+    {{- if eq .Values.cloudProvider "aws" }}
+      {{- range $key, $value := .Values.ingress.aws.annotations }}
     {{ $key }}: {{ $value | quote }}
+      {{- end }}
+    {{- else if eq .Values.cloudProvider "gcp" }}
+      {{- range $key, $value := .Values.ingress.gcp.annotations }}
+    {{ $key }}: {{ $value | quote }}
+      {{- end }}
+    {{- else if eq .Values.cloudProvider "azure" }}
+      {{- range $key, $value := .Values.ingress.azure.annotations }}
+    {{ $key }}: {{ $value | quote }}
+      {{- end }}
     {{- end }}
 spec:
-  ingressClassName: alb
+  ingressClassName: {{- if eq .Values.cloudProvider "aws" }}{{ .Values.ingress.aws.ingressClassName }}{{- else if eq .Values.cloudProvider "gcp" }}{{ .Values.ingress.gcp.ingressClassName }}{{- else if eq .Values.cloudProvider "azure" }}{{ .Values.ingress.azure.ingressClassName }}{{- end }}
   rules:
     - http:
         paths:

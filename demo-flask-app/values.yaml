@@ -11,14 +11,29 @@ service:
   type: NodePort
   port: 80
   targetPort: 3000
+
+# Set the cloud provider for ingress configuration: aws | gcp | azure
+cloudProvider: aws
+
 ingress:
   enabled: true
   path: /
   pathType: Prefix
-  albGroup: my-apps
-  annotations:
-    alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/group.name: my-apps
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+  # Ingress annotations and class are set dynamically by cloudProvider
+  aws:
+    ingressClassName: alb
+    annotations:
+      alb.ingress.kubernetes.io/scheme: internet-facing
+      alb.ingress.kubernetes.io/target-type: ip
+      alb.ingress.kubernetes.io/group.name: my-apps
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+  gcp:
+    ingressClassName: gce
+    annotations:
+      kubernetes.io/ingress.class: gce
+  azure:
+    ingressClassName: nginx
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      # If using AGIC, change ingressClassName and annotations accordingly
     kubernetes.io/ingress.class: alb
