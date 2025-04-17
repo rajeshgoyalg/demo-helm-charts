@@ -2,7 +2,7 @@ appName: demo-flask-app
 
 image:
   repository: rajeshgoyalg/demo-flask-app
-  tag: v20250416-8cb5071
+  tag: v20250417-0532a9f
   pullPolicy: Always
 
 replicaCount: 2
